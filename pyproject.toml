@@ -8,6 +8,7 @@ readme = "README.md"
 packages = [{include = "cpac_nodeblock_testing", from = "src"}]
 
 [tool.poetry.dependencies]
+CPAC = {git = "https://github.com/FCP-INDI/C-PAC.git", branch = "pyproject.toml"}
 python = ">=3.10"
 
 [tool.poetry.group.dev.dependencies]
@@ -74,7 +75,7 @@ order-by-type = false
 section-order = ["future", "standard-library", "third-party", "collab", "other-first-party", "first-party", "local-folder"]
 
 [tool.ruff.lint.isort.sections]
-"collab" = []
+"collab" = ["nipype"]
 "other-first-party" = ["CPAC"]
 
 [tool.ruff.lint.pydocstyle]
@@ -87,5 +88,5 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [build-system]
-requires = ["poetry-core>=1.2.0"]
+requires = ["poetry-core>=1.2.0", "numpy"]
 build-backend = "poetry.core.masonry.api"

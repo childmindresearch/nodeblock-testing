@@ -34,6 +34,8 @@ repos:
   rev: v1.9.0
   hooks:
   - id: mypy
+    additional_dependencies:
+    - https://github.com/FCP-INDI/C-PAC/archive/pyproject.toml.zip
 - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
   rev: v2.13.0
   hooks:
