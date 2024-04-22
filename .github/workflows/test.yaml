@@ -19,6 +19,8 @@ jobs:
         cache: poetry
     - name: Install dependencies
       run: |
+        sudo apt-get update
+        sudo apt-get install graphviz graphviz-dev
         poetry install
     - name: Run tests
       id: run-tests
@@ -53,5 +55,7 @@ jobs:
         python-version: '3.11'
         cache: poetry
     - run: |
+        sudo apt-get update
+        sudo apt-get install graphviz graphviz-dev
         poetry install
         poetry run mypy .
