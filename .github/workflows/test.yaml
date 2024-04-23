@@ -24,7 +24,8 @@ jobs:
         poetry install
     - name: Run tests
       id: run-tests
-      run: >
+      run: |
+        export FSLDIR='$FSLDIR'
         poetry run pytest \
           --junitxml=pytest.xml \
           --cov-report=term-missing:skip-covered \
