@@ -8,7 +8,10 @@ readme = "README.md"
 packages = [{include = "cpac_nodeblock_testing", from = "src"}]
 
 [tool.poetry.dependencies]
-CPAC = {git = "https://github.com/FCP-INDI/C-PAC.git", branch = "pyproject.toml"}
+CPAC = [
+  {git = "https://github.com/FCP-INDI/C-PAC.git", branch = "pyproject.toml"},
+  {version = ">=1.8.6"}
+]
 numpy = "1.21.5"
 python = ">=3.10,<3.11"
 
