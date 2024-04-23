@@ -68,7 +68,14 @@ def brain_extraction_inputs(
 
 
 def _validate_exclude(exclude: Optional[list[str] | str]) -> list[str]:
-    """Coerce exclude argument to be a list of strings."""
+    """Coerce exclude argument to be a list of strings.
+
+    Examples
+    --------
+    >>> _validate_exclude(exclude=100)
+    Traceback (most recent call last):
+    TypeError: 100 is <class 'int'> but list[str] is required.
+    """
     if exclude is None:
         return []
     if isinstance(exclude, str):
