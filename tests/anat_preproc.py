@@ -80,15 +80,15 @@ def test_brain_extraction(
         # Return the updated ResourcePool.
         return rpool
 
-    exclude = _validate_exclude(exclude)
+    _exclude = _validate_exclude(exclude)  # noqa: no-redef
 
     # Make sure required inputs raise LookupError when missing...
     for resource in ["desc-head_T1w", "space-T1w_desc-brain_mask"]:
-        if resource in exclude:
-            _run_test(exclude, LookupError)
+        if resource in _exclude:
+            _run_test(_exclude, LookupError)
             return
     # ...and LookupError isn't raised otherwise.
-    rpool = _run_test(exclude)
+    rpool = _run_test(_exclude)
 
     # Make sure all outputs from the connected NodeBlock are in the final ResourcePool
     try:
