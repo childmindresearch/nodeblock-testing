@@ -27,6 +27,9 @@ testpaths = [
   "tests"
 ]
 
+[tool.mypy]
+mypy_path = ".stubs"
+
 [tool.ruff]
 exclude = [
   ".bzr",

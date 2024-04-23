@@ -1,0 +1,3 @@
+"""Typing stubs for traits.api."""
+
+class HasTraits: ...

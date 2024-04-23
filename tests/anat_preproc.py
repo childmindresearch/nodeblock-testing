@@ -41,7 +41,7 @@ def test_brain_extraction(
     def _run_test(
         exclude: Optional[list[str]],
         expected_exception: Optional[type[Exception]] = None,
-    ) -> ResourcePool:
+    ) -> Optional[ResourcePool]:
         """
         Run a test of the NodeBlock connections.
 
@@ -60,7 +60,7 @@ def test_brain_extraction(
 
         # Make sure we don't already have all the outputs in the inputs.
         assert not all(
-            [output in rpool.rpool for output in brain_extraction.outputs]
+            [output in rpool.get_entire_rpool() for output in brain_extraction.outputs]
         ), "All outputs are present in the resource pool before connecting NodeBlock."
 
         # Make sure we catch missing required inputs.
@@ -72,7 +72,7 @@ def test_brain_extraction(
                 "None of the listed resources are in the resource pool:" in _e
                 and resource in _e
             ), f"{_e}\nC-PAC isn't complaining about missing resource {resource}."
-            return
+            return None
 
         # Connect the nodeblock(s).
         connect_pipeline(wf, BRAIN_EXTRACTION_CFG, rpool, [brain_extraction])
@@ -92,12 +92,16 @@ def test_brain_extraction(
 
     # Make sure all outputs from the connected NodeBlock are in the final ResourcePool
     try:
-        assert all([output in rpool.rpool for output in brain_extraction.outputs])
+        assert rpool is not None
+        assert all(
+            [output in rpool.get_entire_rpool() for output in brain_extraction.outputs]
+        )
     # Tell us which are missing if any are.
     except AssertionError:
         missing = []
         for output in brain_extraction.outputs:
-            if output not in rpool.rpool:
+            assert rpool is not None
+            if output not in rpool.get_entire_rpool():
                 missing.append(output)
         msg = (
             "After connecting `brain_extraction`, still missing" f" outputs {missing}."

@@ -16,8 +16,6 @@
 # License along with C-PAC. If not, see <https://www.gnu.org/licenses/>.
 """ResourcePool storage."""
 
-from pathlib import Path
-import pickle
 from typing import Optional, Union
 
 from CPAC.pipeline.engine import ResourcePool
@@ -75,12 +73,12 @@ class ResourcePoolPool:
         return str(list(self.rpools.keys()))
 
 
-def rp_factory(keys: _KEY_TYPE, module: Path) -> ResourcePool:
-    """Given a list of resource keys, return a ResourcePool with all of them."""
-    existing_pickle_path = module / "existing.pkl"
-    if existing_pickle_path.exists():
-        with open("existing.pkl", "rb") as _existing:
-            resource_pools: ResourcePoolPool = pickle.load(_existing)
-    else:
-        resource_pools = ResourcePoolPool()
-    keys, resource_pools  # TODO finish this factory
+# def rp_factory(keys: _KEY_TYPE, module: Path) -> ResourcePool:
+#     """Given a list of resource keys, return a ResourcePool with all of them."""
+#     existing_pickle_path = module / "existing.pkl"
+#     if existing_pickle_path.exists():
+#         with open("existing.pkl", "rb") as _existing:
+#             resource_pools: ResourcePoolPool = pickle.load(_existing)
+#     else:
+#         resource_pools = ResourcePoolPool()
+#     keys, resource_pools  # TODO finish this factory
