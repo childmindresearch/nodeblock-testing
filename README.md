@@ -16,6 +16,6 @@ You should have received a copy of the GNU Lesser General Public
 License along with C-PAC. If not, see <https://www.gnu.org/licenses/>. -->
 # C-PAC nodeblock testing
 
-<a href="./COPYING.LESSER"><img alt="LGPLv3" src="https://www.gnu.org/graphics/lgplv3-88x31.png" height="20px"></a> <a href="https://codecov.io/gh/childmindresearch/nodeblock-testing"><img src="https://codecov.io/gh/childmindresearch/nodeblock-testing/graphs/sunburst.svg?token=r2q92igr8o" alt="coverage sunburst" height="20px"> <img src="https://codecov.io/gh/childmindresearch/nodeblock-testing/graph/badge.svg?token=r2q92igr8o" alt="codecov badge"></a>
+<a href="./COPYING.LESSER"><img alt="LGPLv3" src="https://www.gnu.org/graphics/lgplv3-88x31.png" height="20px"></a> <a href="https://codecov.io/gh/childmindresearch/nodeblock-testing"><img src="https://codecov.io/gh/childmindresearch/nodeblock-testing/graphs/sunburst.svg?token=r2q92igr8o" alt="coverage sunburst" height="20px"> <img src="https://codecov.io/gh/childmindresearch/nodeblock-testing/graph/badge.svg?token=r2q92igr8o" alt="codecov badge"></a> [![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
 
 Testing for C-PAC nodeblocks.
