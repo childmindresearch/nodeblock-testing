@@ -23,8 +23,12 @@ from CPAC.anat_preproc.anat_preproc import brain_extraction
 from CPAC.pipeline.cpac_pipeline import connect_pipeline
 from CPAC.pipeline.engine import ResourcePool
 
-from cpac_nodeblock_testing.resource_pools.anat_preproc import (
+from cpac_nodeblock_testing.resource_pools.utils import (
+    create_rpool,
     _validate_exclude,
+)
+
+from cpac_nodeblock_testing.resource_pools.anat_preproc import (
     BRAIN_EXTRACTION_CFG,
     brain_extraction_inputs,
 )

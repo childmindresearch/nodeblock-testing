@@ -23,6 +23,10 @@ from CPAC.pipeline.engine import ResourcePool
 from CPAC.pipeline.nipype_pipeline_engine import Workflow
 from CPAC.utils.configuration import Configuration
 from CPAC.utils.test_init import create_dummy_node
+from cpac_nodeblock_testing.resource_pools.utils import (
+    create_rpool,
+    _validate_exclude,
+)
 
 BRAIN_EXTRACTION_CFG = Configuration(
     {
@@ -31,56 +35,13 @@ BRAIN_EXTRACTION_CFG = Configuration(
     }
 )
 
-
-def brain_extraction_inputs(
-    exclude: Optional[list[str]] = None,
-) -> tuple[Workflow, ResourcePool]:
-    """Resource pool for ~CPAC.anat_preproc.anat_preproc.brain_extraction."""
-    rpool = ResourcePool(name="brain_extraction_inputs", cfg=BRAIN_EXTRACTION_CFG)
-    wf = Workflow(name="brain_extraction_inputs")
-    exclude = _validate_exclude(exclude)
-    resources = [
-        resource
-        for resource in [
+BRAIN_EXTRACTION_RESOURCES = [
             "desc-head_T1w",
             "desc-preproc_T1w",
             "space-T1w_desc-brain_mask",
         ]
-        if resource not in exclude
-    ]
-    node = create_dummy_node(name="brain_extraction_inputs", fields=resources)
-    with as_file(files("cpac_nodeblock_testing")) as repo:
-        for resource in resources:
-            setattr(
-                node.inputs,
-                resource,
-                repo / f"data/anat/sub-1_ses-1_run-1_{resource}.nii.gz",
-            )
-            rpool.set_data(
-                resource=resource,
-                node=node,
-                output=resource,
-                json_info={},
-                pipe_idx="",
-                node_name="brain_extraction_inputs",
-            )
+
+def brain_extraction_inputs(exclude=None):
+    wf, rpool = create_rpool(name="brain_extraction_inputs", inputs=BRAIN_EXTRACTION_RESOURCES, 
+            cfg=BRAIN_EXTRACTION_CFG, exclude=None)
     return wf, rpool
-
-
-def _validate_exclude(exclude: Optional[list[str] | str]) -> list[str]:
-    """Coerce exclude argument to be a list of strings.
-
-    Examples
-    --------
-    >>> _validate_exclude(exclude=100)
-    Traceback (most recent call last):
-    TypeError: 100 is <class 'int'> but list[str] is required.
-    """
-    if exclude is None:
-        return []
-    if isinstance(exclude, str):
-        return [exclude]
-    if not isinstance(exclude, list):
-        msg = f"{exclude} is {type(exclude)} but list[str] is required."
-        raise TypeError(msg)
-    return exclude
