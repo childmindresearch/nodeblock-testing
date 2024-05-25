@@ -21,7 +21,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install graphviz graphviz-dev
-        poetry install
+        poetry install --extras "dev"
     - name: Run tests
       id: run-tests
       run: |
@@ -58,5 +58,5 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install graphviz graphviz-dev
-        poetry install
+        poetry install --extras "dev"
         poetry run mypy .
