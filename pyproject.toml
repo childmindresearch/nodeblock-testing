@@ -18,7 +18,7 @@ mypy = {version = "^1.10.0", optional = true}
 pre_commit = {version = "^3.7.0", optional = true}
 pytest = {version = "^8.2.0", optional = true}
 pytest_cov = {version = "^5.0.0", optional = true}
-ruff = {version = "^0.4.2", optional = true}
+ruff = {version = "^0.4.7", optional = true}
 
 [tool.poetry.extras]
 dev = ["mypy", "pre-commit", "pytest", "pytest-cov", "ruff"]
