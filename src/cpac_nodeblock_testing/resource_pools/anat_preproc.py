@@ -18,22 +18,18 @@
 
 from importlib.resources import as_file, files
 from typing import Optional
+import os
 
 from CPAC.pipeline.engine import ResourcePool
 from CPAC.pipeline.nipype_pipeline_engine import Workflow
 from CPAC.utils.configuration import Configuration
 from CPAC.utils.test_init import create_dummy_node
 from cpac_nodeblock_testing.resource_pools.utils import (
-    create_rpool,
+    load_rpool,
     _validate_exclude,
 )
 
-BRAIN_EXTRACTION_CFG = Configuration(
-    {
-        "FROM": "blank",
-        "anatomical_preproc": {"brain_extraction": {"run": True}, "run": True},
-    }
-)
+BRAIN_EXTRACTION_CFG = ["anatomical_preproc", {"brain_extraction": {"run": True}, "run": True}]
 
 BRAIN_EXTRACTION_RESOURCES = [
             "desc-head_T1w",
@@ -41,7 +37,8 @@ BRAIN_EXTRACTION_RESOURCES = [
             "space-T1w_desc-brain_mask",
         ]
 
-def brain_extraction_inputs(exclude=None):
-    wf, rpool = create_rpool(name="brain_extraction_inputs", inputs=BRAIN_EXTRACTION_RESOURCES, 
-            cfg=BRAIN_EXTRACTION_CFG, exclude=None)
+def brain_extraction_inputs(CFG, wf, rpool, exclude=None):
+    
+    wf, rpool = load_rpool(CFG, wf, rpool, name="brain_extraction_inputs", inputs=BRAIN_EXTRACTION_RESOURCES, 
+            exclude=None)
     return wf, rpool

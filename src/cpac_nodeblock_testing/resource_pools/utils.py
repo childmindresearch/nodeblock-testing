@@ -44,28 +44,46 @@ def _validate_exclude(exclude: Optional[list[str] | str]) -> list[str]:
         raise TypeError(msg)
     return exclude
 
-def create_rpool(name, inputs, cfg, 
-        exclude: Optional[list[str]] = None) -> tuple[Workflow, ResourcePool]:
-    rpool = ResourcePool(name=name, cfg=cfg)
-    wf = Workflow(name="brain_extraction_inputs")
-    exclude = _validate_exclude(exclude)
-    resources = [file for file in inputs if file not in exclude]
-    node = create_dummy_node(name=name, fields=resources)
-    with as_file(files("cpac_nodeblock_testing")) as repo:
-        for resource in resources:
-            setattr(
-                node.inputs,
-                resource,
-                repo / f"data/anat/sub-1_ses-1_run-1_{resource}.nii.gz",
-            )
-            rpool.set_data(
-                resource=resource,
-                node=node,
-                output=resource,
-                json_info={},
-                pipe_idx="",
-                node_name=name,
-            )
+def initialize_rpool(cfg) -> tuple[Workflow, ResourcePool]:
+    wf = Workflow(name='load_resources')
+    rpool = ResourcePool(name="load_rpool", cfg=cfg)
     return wf, rpool
 
+def load_rpool(cfg, wf, rpool, name, inputs,
+        exclude: Optional[list[str]] = None) -> tuple[Workflow, ResourcePool]:
 
+    exclude = _validate_exclude(exclude)
+    resources = [file for file in inputs if file not in exclude]
+    resources = [item[0] if isinstance(item, tuple) else item for item in resources]
+    resources.append("scan")
+    node = create_dummy_node(name=name, fields=resources)
+    node.scan = 'task-rest'
+    rpool.set_data("scan", node, "scan", {}, "", "func_ingress")
+    with as_file(files("cpac_nodeblock_testing")) as repo:
+        for resource in resources:
+            if isinstance(resource, tuple):
+                for item in resource:
+                    rpool = load_resources(item, name, repo, node, inputs, rpool)
+            else:
+                rpool = load_resources(resource, name, repo, node, inputs, rpool)
+
+    return wf, rpool
+
+def load_resources(resource, name, repo, node, inputs, rpool):
+    
+    # Want to pass {subdir} as arg
+    # if subdir == func, add scan name to resource name
+    setattr(
+        node.inputs,
+        resource,
+        repo / f"data/anat/sub-1_ses-1_run-1_{resource}.nii.gz",
+    )
+    rpool.set_data(
+        resource=resource,
+        node=node,
+        output=resource,
+        json_info={},
+        pipe_idx="",
+        node_name=name,
+    )
+    return rpool
