@@ -20,10 +20,32 @@
 from importlib.resources import as_file, files
 from typing import Optional
 
+from nipype.pipeline.engine import Node
 from CPAC.pipeline.engine import ResourcePool
 from CPAC.pipeline.nipype_pipeline_engine import Workflow
-from CPAC.utils.configuration import Configuration
 from CPAC.utils.test_init import create_dummy_node
+
+
+class Resource:
+    """Class to determine resource path and type."""
+
+    def __init__(self, resource: str) -> None:
+        """Find the resource and its type."""
+        self.key = resource
+        """Resource key string."""
+        with as_file(files("cpac_nodeblock_testing")) as repo:
+            for resource_type in ["anat", "fmap", "func"]:
+                resource_path = (
+                    repo / f"data/{resource_type}/sub-1_ses-1_run-1_{resource}.nii.gz"
+                )
+                if resource_path.exists():
+                    self.path = resource_path
+                    """Path to Resource."""
+                    self.type = resource_type
+                    """Type of Resource."""
+                    break  # store first match and stop
+        if not hasattr(self, "path"):
+            raise FileNotFoundError(resource)
 
 
 def _validate_exclude(exclude: Optional[list[str] | str]) -> list[str]:
@@ -44,44 +66,49 @@ def _validate_exclude(exclude: Optional[list[str] | str]) -> list[str]:
         raise TypeError(msg)
     return exclude
 
+
 def initialize_rpool(cfg) -> tuple[Workflow, ResourcePool]:
-    wf = Workflow(name='load_resources')
+    wf = Workflow(name="load_resources")
     rpool = ResourcePool(name="load_rpool", cfg=cfg)
     return wf, rpool
 
-def load_rpool(cfg, wf, rpool, name, inputs,
-        exclude: Optional[list[str]] = None) -> tuple[Workflow, ResourcePool]:
 
+def load_rpool(
+    cfg, wf, rpool, name, inputs, exclude: Optional[list[str]] = None
+) -> tuple[Workflow, ResourcePool]:
     exclude = _validate_exclude(exclude)
     resources = [file for file in inputs if file not in exclude]
     resources = [item[0] if isinstance(item, tuple) else item for item in resources]
     resources.append("scan")
     node = create_dummy_node(name=name, fields=resources)
-    node.scan = 'task-rest'
+    node.scan = "task-rest"
     rpool.set_data("scan", node, "scan", {}, "", "func_ingress")
-    with as_file(files("cpac_nodeblock_testing")) as repo:
-        for resource in resources:
-            if isinstance(resource, tuple):
-                for item in resource:
-                    rpool = load_resources(item, name, repo, node, inputs, rpool)
-            else:
-                rpool = load_resources(resource, name, repo, node, inputs, rpool)
+
+    for resource in resources:
+        if isinstance(resource, tuple):
+            for item in resource:
+                rpool = load_resource(item, name, node, rpool)
+        else:
+            rpool = load_resource(resource, name, node, rpool)
 
     return wf, rpool
 
-def load_resources(resource, name, repo, node, inputs, rpool):
-    
+
+def load_resource(key: str, name: str, node: Node, rpool: ResourcePool) -> ResourcePool:
+    resource = Resource(key)
     # Want to pass {subdir} as arg
-    # if subdir == func, add scan name to resource name
+    if resource.type == "func":
+        # if subdir == func, add scan name to resource name
+        pass
     setattr(
         node.inputs,
-        resource,
-        repo / f"data/anat/sub-1_ses-1_run-1_{resource}.nii.gz",
+        resource.key,
+        resource.path,
     )
     rpool.set_data(
-        resource=resource,
+        resource=resource.key,
         node=node,
-        output=resource,
+        output=resource.key,
         json_info={},
         pipe_idx="",
         node_name=name,
