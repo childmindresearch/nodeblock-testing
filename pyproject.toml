@@ -9,18 +9,19 @@ packages = [{include = "cpac_nodeblock_testing", from = "src"}]
 
 [tool.poetry.dependencies]
 CPAC = [
-  {git = "https://github.com/FCP-INDI/C-PAC.git", branch = "pyproject.toml"},
-  {version = ">=1.8.6"}
+  {git = "https://github.com/FCP-INDI/C-PAC.git", branch = "develop"},
+  {version = ">=1.8.7"}
 ]
 numpy = "1.26.4"
 python = ">=3.10,<3.11"
+mypy = {version = "^1.10.0", optional = true}
+pre_commit = {version = "^3.7.0", optional = true}
+pytest = {version = "^8.2.0", optional = true}
+pytest_cov = {version = "^5.0.0", optional = true}
+ruff = {version = "^0.4.2", optional = true}
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.2.0"
-mypy = "^1.10.0"
-pre-commit = "^3.7.0"
-pytest-cov = "^5.0.0"
-ruff = "^0.4.2"
+[tool.poetry.extras]
+dev = ["mypy", "pre-commit", "pytest", "pytest-cov", "ruff"]
 
 [tool.coverage.run]
 branch = true
