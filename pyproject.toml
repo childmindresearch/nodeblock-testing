@@ -12,13 +12,13 @@ CPAC = [
   {git = "https://github.com/FCP-INDI/C-PAC.git", branch = "develop"},
   {version = ">=1.8.7"}
 ]
-numpy = "1.26.4"
+numpy = "2.0.0"
 python = ">=3.10,<3.11"
-mypy = {version = "^1.10.0", optional = true}
+mypy = {version = "^1.10.1", optional = true}
 pre_commit = {version = "^3.7.0", optional = true}
-pytest = {version = "^8.2.0", optional = true}
+pytest = {version = "^8.2.2", optional = true}
 pytest_cov = {version = "^5.0.0", optional = true}
-ruff = {version = "^0.4.2", optional = true}
+ruff = {version = "^0.5.0", optional = true}
 
 [tool.poetry.extras]
 dev = ["mypy", "pre-commit", "pytest", "pytest-cov", "ruff"]
