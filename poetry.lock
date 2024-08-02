@@ -3248,4 +3248,4 @@ dev = ["mypy", "pre_commit", "pytest", "pytest_cov", "ruff"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.11"
-content-hash = "2f451d28a81768dd34ba85421b3dc92dd3d9a43b5448b6887a2a5bbe95605c21"
+content-hash = "d0c5e3f53b0d2313cad14258b5a43f43d962cb1e5c900bd097d9475073f5d68e"
